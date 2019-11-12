@@ -87,14 +87,10 @@ namespace StudentExercisesMVC.Controllers
                             SlackHandle = reader.GetString(reader.GetOrdinal("SlackHandle")),
                          
                         };
-
-
-
-                        }
-                        reader.Close();
-
-
-                        return View(student);
+                                                
+                    }
+                    reader.Close();
+                    return View(student);
                     
                 }
             }
@@ -149,7 +145,8 @@ namespace StudentExercisesMVC.Controllers
         // GET: Student/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Student student = GetById(id);
+            return View(student);
         }
 
         // POST: Student/Delete/5
@@ -159,13 +156,50 @@ namespace StudentExercisesMVC.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd=conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"DELETE FROM Student WHERE id = @id";
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
+                        cmd.ExecuteNonQuery();
+                    }
+                }
 
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
                 return View();
+            }
+        }
+
+        private Student GetById(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT s.id, s.FirstName, s.LastName, s.SlackHandle FROM Student s WHERE s.id = @id";
+                    cmd.Parameters.Add(new SqlParameter("id", id));
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    Student student = null;
+
+                    if(reader.Read())
+                    {
+                        student = new Student
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            SlackHandle = reader.GetString(reader.GetOrdinal("SlackHandle"))
+                        };
+                    }
+                    reader.Close();
+                    return student;
+                }
             }
         }
     }
