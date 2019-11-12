@@ -69,10 +69,9 @@ namespace StudentExercisesMVC.Controllers
                 conn.Open();
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"
-            SELECT s.Id, s.FirstName, s.LastName, s.SlackHandle,
-              FROM Students s
-             WHERE s.id = @id";
+                    cmd.CommandText = @" SELECT s.Id, s.FirstName, s.LastName, s.SlackHandle,
+                                           FROM Students s
+                                          WHERE s.id = @id";
                     cmd.Parameters.Add(new SqlParameter("@id", id));
                     SqlDataReader reader = cmd.ExecuteReader();
 
