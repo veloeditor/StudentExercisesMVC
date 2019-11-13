@@ -19,10 +19,10 @@ namespace StudentExercisesMVC.Models
 
 
         public int Id { get; set; }
-        [Display(Name = "Exercise")]
+        [Display(Name = "Name")]
         [Required]
         public string Name { get; set; }
-        [Display(Name = "Coding Language")]
+        [Display(Name = "Language")]
         [Required]
         public string CodeLanguage { get; set; }
         [Display(Name = "Student List")]
