@@ -150,7 +150,7 @@ namespace StudentExercisesMVC.Controllers
             }
         }
 
-        // GET: Cohorts/Delete/5 - get the Cohort that you want to delete
+        // GET: Cohorts/Delete/5
         public ActionResult Delete(int id)
         {
             Cohort cohort = GetCohortById(id);
