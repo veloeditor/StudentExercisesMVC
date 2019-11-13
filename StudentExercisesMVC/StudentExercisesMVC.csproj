@@ -14,4 +14,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Instuctor\" />
+    <Folder Include="Views\Exercises\" />
+  </ItemGroup>
+
 </Project>

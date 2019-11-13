@@ -11,7 +11,7 @@ namespace StudentExercisesMVC.Models
     {
         public int Id { get; set; }
         [Required]
-        [StringLength(11, MinimumLength = 5)]
+        [StringLength(20, MinimumLength = 5)]
         [Display(Name = "Cohort")]
         public string Name { get; set; }
         [Display(Name = "Student List")]

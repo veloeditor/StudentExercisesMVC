@@ -115,22 +115,11 @@ namespace StudentExercisesMVC.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            var viewModel = new StudentCreateViewModel();
             var cohorts = GetAllCohorts();
-            var selectItems = cohorts
-                .Select(cohort => new SelectListItem
-                {
-                    Text = cohort.Name,
-                    Value = cohort.Id.ToString()
-                })
-                .ToList();
-
-            selectItems.Insert(0, new SelectListItem
+            var viewModel = new StudentCreateViewModel()
             {
-                Text = "Choose cohort...",
-                Value = "0"
-            });
-            viewModel.Cohorts = selectItems;
+                Cohorts = cohorts
+            };
             return View(viewModel);
         }
 
@@ -162,17 +151,41 @@ namespace StudentExercisesMVC.Controllers
         // GET: Student/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var cohorts = GetAllCohorts();
+            var student = GetById(id);
+
+            var viewModel = new StudentCreateViewModel()
+            {
+                Cohorts = cohorts,
+                Student = student
+            };
+            return View(viewModel);
         }
 
         // POST: Student/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, StudentCreateViewModel viewModel)
         {
             try
             {
-                // TODO: Add update logic here
+                var updatedStudent = viewModel.Student;
+                using (SqlConnection conn = Connection)
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"UPDATE Students SET FirstName = @firstname, LastName = @lastname, SlackHandle = @slackhandle, CohortId = @cohortId
+                        WHERE Id = @id";
+                        cmd.Parameters.Add(new SqlParameter("@firstname", updatedStudent.FirstName));
+                        cmd.Parameters.Add(new SqlParameter("@lastname", updatedStudent.LastName));
+                        cmd.Parameters.Add(new SqlParameter("@slackhandle", updatedStudent.SlackHandle));
+                        cmd.Parameters.Add(new SqlParameter("@cohortId", updatedStudent.CohortId));
+                        cmd.Parameters.Add(new SqlParameter("@id", id));
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
 
                 return RedirectToAction(nameof(Index));
             }
